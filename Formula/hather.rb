@@ -1,0 +1,33 @@
+class Hather < Formula
+  desc "Hather command-line tool"
+  homepage "https://github.com/hat-y/Hather"
+  url "https://github.com/hat-y/Hather/releases/download/v0.1.0/hather-0.1.0.tar.gz"
+  version "0.1.0"
+  sha256 "47dcf26b60e1b6ef89cc92d5a145480caf939f13f3f2b32ccd7a6b6c5b6219e3"
+
+  depends_on "go" => :build
+
+  def install
+    system "go", "build", *std_go_args(ldflags: "-X main.version=#{version}"), "-mod=vendor", "./cmd/hather"
+  end
+
+  test do
+    assert_predicate bin/"hather", :executable?
+    assert_match "Usage:", shell_output("#{bin}/hather --help")
+    assert_match version.to_s, shell_output("#{bin}/hather --version")
+
+    image = testpath/"fixture.png"
+    image.binwrite("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=".unpack1("m0"))
+    home = testpath/"home"
+    home.mkpath
+    ENV["HOME"] = home.to_s
+
+    assert_match "status: complete", shell_output("#{bin}/hather preview --image #{image}")
+    output = shell_output("#{bin}/hather apply --image #{image} --adapters ghostty,herdr,neovim,vscode 2>&1", 2)
+    assert_match "status: partial_failure", output
+    assert_match "ghostty: unavailable", output
+    assert_match "herdr: unavailable", output
+    assert_match "neovim: unavailable", output
+    assert_match "vscode: unavailable", output
+  end
+end
