@@ -1,9 +1,9 @@
 class Hather < Formula
   desc "Hather command-line tool"
   homepage "https://github.com/hat-y/Hather"
-  url "https://github.com/hat-y/Hather/releases/download/v0.1.1/hather-0.1.1.tar.gz"
-  version "0.1.1"
-  sha256 "4fab7f20edef179cefa28f1f493915399b20d7db0c4f719d308e3121879a50f4"
+  url "https://github.com/hat-y/Hather/releases/download/v0.1.2/hather-0.1.2.tar.gz"
+  version "0.1.2"
+  sha256 "838b6c07aee76d80e02eaabeeb44ff798a19dd6cef5e2f424187776e54503868"
 
   depends_on "go" => :build
 
